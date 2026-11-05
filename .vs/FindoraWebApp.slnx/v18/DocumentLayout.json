@@ -1,0 +1,240 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\FindoraWebApp\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\placeworkinghours.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\placeworkinghours.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\placesuggestion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\placesuggestion.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\enums\\placesuggestionstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\enums\\placesuggestionstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\review.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\applicationuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\favorite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\favorite.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\placeimages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\placeimages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\placeamenity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\placeamenity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\place.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\place.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\governorate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\governorate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\city.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\city.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\models\\amenity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\models\\amenity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|d:\\findorawebapp\\findora\\findora.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{E3BA6806-6F6B-A16C-54F3-7C005A28E48C}|Findora\\Findora.csproj|solutionrelative:findora\\findora.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Review.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\Review.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\Review.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\Review.cs",
+              "RelativeToolTip": "Findora\\Models\\Review.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:57:12.707Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ApplicationUser.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\ApplicationUser.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\ApplicationUser.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\ApplicationUser.cs",
+              "RelativeToolTip": "Findora\\Models\\ApplicationUser.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABUAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T19:42:43.987Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PlaceSuggestion.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\PlaceSuggestion.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\PlaceSuggestion.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\PlaceSuggestion.cs",
+              "RelativeToolTip": "Findora\\Models\\PlaceSuggestion.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAABWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T19:29:15.245Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Favorite.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\Favorite.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\Favorite.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\Favorite.cs",
+              "RelativeToolTip": "Findora\\Models\\Favorite.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:56:18.033Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PlaceWorkingHours.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\PlaceWorkingHours.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\PlaceWorkingHours.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\PlaceWorkingHours.cs",
+              "RelativeToolTip": "Findora\\Models\\PlaceWorkingHours.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:57:08.004Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PlaceImages.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\PlaceImages.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\PlaceImages.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\PlaceImages.cs",
+              "RelativeToolTip": "Findora\\Models\\PlaceImages.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:56:47.9Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PlaceSuggestionStatus.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Enums\\PlaceSuggestionStatus.cs",
+              "RelativeDocumentMoniker": "Findora\\Enums\\PlaceSuggestionStatus.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Enums\\PlaceSuggestionStatus.cs",
+              "RelativeToolTip": "Findora\\Enums\\PlaceSuggestionStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T16:10:49.028Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PlaceAmenity.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\PlaceAmenity.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\PlaceAmenity.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\PlaceAmenity.cs",
+              "RelativeToolTip": "Findora\\Models\\PlaceAmenity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:56:35.043Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Place.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\Place.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\Place.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\Place.cs",
+              "RelativeToolTip": "Findora\\Models\\Place.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAADwvxwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-02T19:28:10.96Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Governorate.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\Governorate.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\Governorate.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\Governorate.cs",
+              "RelativeToolTip": "Findora\\Models\\Governorate.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:56:23.204Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "City.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\City.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\City.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\City.cs",
+              "RelativeToolTip": "Findora\\Models\\City.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:56:10.273Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Amenity.cs",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Models\\Amenity.cs",
+              "RelativeDocumentMoniker": "Findora\\Models\\Amenity.cs",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Models\\Amenity.cs",
+              "RelativeToolTip": "Findora\\Models\\Amenity.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-05T13:55:53.343Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Findora.csproj",
+              "DocumentMoniker": "D:\\FindoraWebApp\\Findora\\Findora.csproj",
+              "RelativeDocumentMoniker": "Findora\\Findora.csproj",
+              "ToolTip": "D:\\FindoraWebApp\\Findora\\Findora.csproj",
+              "RelativeToolTip": "Findora\\Findora.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-11-02T19:29:26.751Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
