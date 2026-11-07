@@ -12,16 +12,16 @@ public class Place
     public string Description { get; set; }
 
     [Range(-90, 90)]
-    public double? Latitude { get; set; }
+    public decimal? Latitude { get; set; }
 
     [Range(-180, 180)]
-    public double? Longitude { get; set; }
+    public decimal? Longitude { get; set; }
 
     public ICollection<PlaceImages> PlaceImages { get; set; } = new List<PlaceImages>();
     public ICollection<PlaceWorkingHours> WorkingHours { get; set; } = new List<PlaceWorkingHours>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
     public ICollection<PlaceAmenity> PlaceAmenities { get; set; } = new List<PlaceAmenity>();
-    public ICollection<Favourite> Favourites { get; set; } = new List<Favourite>();
+    public ICollection<Favourites> Favourites { get; set; } = new List<Favourites>();
     public int CityId { get; set; }
     public City City { get; set; }
 

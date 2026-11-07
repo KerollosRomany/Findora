@@ -9,7 +9,7 @@ public class PlaceWorkingHours
     public DayOfWeek Day { get; set; }
     public TimeOnly? OpenTime { get; set; }
     public TimeOnly? CloseTime { get; set; }
-    public bool? IsClosed { get; set; }
+    public bool IsClosed { get; set; } = false;
 
     public int PlaceId { get; set; }
     public Place Place { get; set; }

@@ -4,14 +4,7 @@ using Microsoft.AspNetCore.Identity;
 namespace Findora.Models;
 public class ApplicationUser : IdentityUser
 {
-    [Required]
-    [MaxLength(50)]
-    public string FirstName { get; set; } = string.Empty;
-
-    [Required]
-    [MaxLength(50)]
-    public string LastName { get; set; } = string.Empty;
-
+    public string FullName { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // User's location
@@ -24,7 +17,7 @@ public class ApplicationUser : IdentityUser
     // User relationships
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    public ICollection<Favourite> Favorites { get; set; } = new List<Favourite>();
+    public ICollection<Favourites> Favorites { get; set; } = new List<Favourites>();
 
     public ICollection<PlaceSuggestion> PlaceSuggestions { get; set; } = new List<PlaceSuggestion>();
 

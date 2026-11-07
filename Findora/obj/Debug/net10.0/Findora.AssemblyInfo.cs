@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Findora")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e0795b8dcfa4de9c4b6ecf237f356e936c5df4d6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Findora")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Findora")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
