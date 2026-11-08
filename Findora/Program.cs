@@ -1,5 +1,7 @@
 using Findora.Data;
 using Findora.Models;
+using Findora.Services;
+using Findora.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,9 +22,12 @@ namespace Findora
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>
                 (options =>
                 {
+                    options.User.RequireUniqueEmail = true;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequiredLength = 8;
                 }).AddEntityFrameworkStores<AppDbContext>();
+
+            builder.Services.AddScoped<ILocationService, LocationService>();
 
             var app = builder.Build();
 
