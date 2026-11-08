@@ -13,14 +13,14 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
 
     public DbSet<Amenity> Amenities { get; set; }
     public DbSet<City> Cities { get; set; }
-    public DbSet<Favourites> Favourites { get; set; } 
+    public DbSet<Favourite> Favourites { get; set; } 
     public DbSet<Governorate> Governorates { get; set; }
     public DbSet<Place> Places { get; set; }
     public DbSet<PlaceAmenity> PlaceAmenities { get; set; }
-    public DbSet<PlaceImages> PlaceImages { get; set; }
+    public DbSet<PlaceImage> PlaceImages { get; set; }
 
     public DbSet<PlaceSuggestion> PlaceSuggestions { get; set; }
-    public DbSet<PlaceWorkingHours> WorkingHours { get; set; }
+    public DbSet<PlaceWorkingHour> WorkingHours { get; set; }
     public DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)

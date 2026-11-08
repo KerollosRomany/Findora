@@ -1,6 +1,6 @@
 namespace Findora.Models;
 
-public class Favourites
+public class Favourite
 {
     public string UserId { get; set; }
     public ApplicationUser User { get; set; }

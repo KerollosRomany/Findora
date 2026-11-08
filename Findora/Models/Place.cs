@@ -17,11 +17,11 @@ public class Place
     [Range(-180, 180)]
     public decimal? Longitude { get; set; }
 
-    public ICollection<PlaceImages> PlaceImages { get; set; } = new List<PlaceImages>();
-    public ICollection<PlaceWorkingHours> WorkingHours { get; set; } = new List<PlaceWorkingHours>();
+    public ICollection<PlaceImage> PlaceImages { get; set; } = new List<PlaceImage>();
+    public ICollection<PlaceWorkingHour> WorkingHours { get; set; } = new List<PlaceWorkingHour>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
     public ICollection<PlaceAmenity> PlaceAmenities { get; set; } = new List<PlaceAmenity>();
-    public ICollection<Favourites> Favourites { get; set; } = new List<Favourites>();
+    public ICollection<Favourite> Favourites { get; set; } = new List<Favourite>();
     public int CityId { get; set; }
     public City City { get; set; }
 

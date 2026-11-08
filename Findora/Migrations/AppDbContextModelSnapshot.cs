@@ -152,7 +152,7 @@ namespace Findora.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("Findora.Models.Favourites", b =>
+            modelBuilder.Entity("Findora.Models.Favourite", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -247,7 +247,7 @@ namespace Findora.Migrations
                     b.ToTable("PlaceAmenities");
                 });
 
-            modelBuilder.Entity("Findora.Models.PlaceImages", b =>
+            modelBuilder.Entity("Findora.Models.PlaceImage", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -324,7 +324,7 @@ namespace Findora.Migrations
                     b.ToTable("PlaceSuggestions");
                 });
 
-            modelBuilder.Entity("Findora.Models.PlaceWorkingHours", b =>
+            modelBuilder.Entity("Findora.Models.PlaceWorkingHour", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -352,8 +352,7 @@ namespace Findora.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PlaceId", "Day", "OpenTime")
-                        .IsUnique()
-                        .HasFilter("[OpenTime] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("WorkingHours");
                 });
@@ -562,7 +561,7 @@ namespace Findora.Migrations
                     b.Navigation("Governorate");
                 });
 
-            modelBuilder.Entity("Findora.Models.Favourites", b =>
+            modelBuilder.Entity("Findora.Models.Favourite", b =>
                 {
                     b.HasOne("Findora.Models.Place", "Place")
                         .WithMany("Favourites")
@@ -571,7 +570,7 @@ namespace Findora.Migrations
                         .IsRequired();
 
                     b.HasOne("Findora.Models.ApplicationUser", "User")
-                        .WithMany("Favorites")
+                        .WithMany("Favourites")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -611,7 +610,7 @@ namespace Findora.Migrations
                     b.Navigation("Place");
                 });
 
-            modelBuilder.Entity("Findora.Models.PlaceImages", b =>
+            modelBuilder.Entity("Findora.Models.PlaceImage", b =>
                 {
                     b.HasOne("Findora.Models.Place", "Place")
                         .WithMany("PlaceImages")
@@ -641,7 +640,7 @@ namespace Findora.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Findora.Models.PlaceWorkingHours", b =>
+            modelBuilder.Entity("Findora.Models.PlaceWorkingHour", b =>
                 {
                     b.HasOne("Findora.Models.Place", "Place")
                         .WithMany("WorkingHours")
@@ -729,7 +728,7 @@ namespace Findora.Migrations
 
             modelBuilder.Entity("Findora.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Favorites");
+                    b.Navigation("Favourites");
 
                     b.Navigation("PlaceSuggestions");
 

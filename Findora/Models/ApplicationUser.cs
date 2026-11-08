@@ -17,7 +17,7 @@ public class ApplicationUser : IdentityUser
     // User relationships
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    public ICollection<Favourites> Favorites { get; set; } = new List<Favourites>();
+    public ICollection<Favourite> Favourites { get; set; } = new List<Favourite>();
 
     public ICollection<PlaceSuggestion> PlaceSuggestions { get; set; } = new List<PlaceSuggestion>();
 
