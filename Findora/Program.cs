@@ -1,11 +1,13 @@
 using Findora.Data;
+using Findora.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Findora
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,13 @@ namespace Findora
 
             builder.Services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>
+                (options =>
+                {
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequiredLength = 8;
+                }).AddEntityFrameworkStores<AppDbContext>();
 
             var app = builder.Build();
 
@@ -28,6 +37,7 @@ namespace Findora
             app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapStaticAssets();
@@ -36,6 +46,10 @@ namespace Findora
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
+            using (var scope = app.Services.CreateScope())
+            {
+                await DbSeeder.SeedAsync(scope.ServiceProvider);
+            }
             app.Run();
         }
     }
