@@ -1,75 +1,121 @@
-﻿@model Findora.ViewModels.Account.RegisterViewModel
+@model Findora.ViewModels.Account.RegisterViewModel
 
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create account";
+    ViewData["HideFooter"] = true;
 }
 
-<h2>Register</h2>
+<section class="auth">
+    <aside class="auth-aside">
+        <h2>Join Findora and find your perfect study spot.</h2>
+        <p class="lead-text">Create a free student account in less than a minute.</p>
+        <ul class="auth-points">
+            <li>
+                <i class="bi bi-geo-alt"></i>
+                <div><strong>Discover places near you</strong><span>Cafés, libraries, study and co-working spaces.</span></div>
+            </li>
+            <li>
+                <i class="bi bi-star"></i>
+                <div><strong>Read and write reviews</strong><span>Real experiences from other students.</span></div>
+            </li>
+            <li>
+                <i class="bi bi-lightbulb"></i>
+                <div><strong>Suggest new places</strong><span>Know a great spot? Add it for everyone.</span></div>
+            </li>
+        </ul>
+    </aside>
 
-<form asp-action="AddStudent" method="post">
+    <div class="auth-main">
+        <div class="auth-card">
+            <h1>Create your account</h1>
+            <p class="sub">Fill in your details to get started.</p>
 
-    @Html.AntiForgeryToken()
+            <form asp-action="AddStudent" method="post">
+                <div asp-validation-summary="ModelOnly"></div>
 
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="FullName" class="form-label"></label>
+                    <div class="input-icon">
+                        <i class="bi bi-person"></i>
+                        <input asp-for="FullName" class="form-control" placeholder="Your full name" autocomplete="name" />
+                    </div>
+                    <span asp-validation-for="FullName"></span>
+                </div>
 
-    <div>
-        <label asp-for="FullName" class="form-label"></label>
-        <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
-        <span asp-validation-for="FullName" class="text-danger"></span>
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <div class="input-icon">
+                        <i class="bi bi-envelope"></i>
+                        <input asp-for="Email" class="form-control" placeholder="you@example.com" autocomplete="email" />
+                    </div>
+                    <span asp-validation-for="Email"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <div class="input-icon has-toggle">
+                        <i class="bi bi-lock"></i>
+                        <input asp-for="Password" class="form-control" placeholder="Create a password" autocomplete="new-password" />
+                        <button type="button" class="pw-toggle" data-toggle-password aria-label="Show password">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-text">At least 8 characters, with an uppercase letter, a lowercase letter and a number.</div>
+                    <span asp-validation-for="Password"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label"></label>
+                    <div class="input-icon has-toggle">
+                        <i class="bi bi-shield-lock"></i>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Repeat your password" autocomplete="new-password" />
+                        <button type="button" class="pw-toggle" data-toggle-password aria-label="Show password">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="ConfirmPassword"></span>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-12">
+                        <label for="governorateDropdown" class="form-label">Governorate</label>
+                        <div class="input-icon">
+                            <i class="bi bi-map"></i>
+                            <select asp-for="GovernorateId" id="governorateDropdown" class="form-select">
+                                <option value="">Select governorate</option>
+                                @foreach (var governorate in Model.Governorates)
+                                {
+                                    <option value="@governorate.Id">@governorate.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="GovernorateId"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="cityDropdown" class="form-label">City</label>
+                        <div class="input-icon">
+                            <i class="bi bi-geo-alt"></i>
+
+                            <select asp-for="CityId" id="cityDropdown" class="form-select" disabled="@(!Model.Cities.Any())">
+                                <option value="">Select city</option>
+                                @foreach (var city in Model.Cities)
+                                {
+                                    <option value="@city.Id">@city.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="CityId"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">Create account</button>
+            </form>
+
+            <p class="auth-switch">Already have an account? <a asp-action="Login">Log in</a></p>
+        </div>
     </div>
-
-    <div>
-        <label asp-for="Email" class="form-label"></label>
-        <input asp-for="Email" class="form-control" placeholder="Enter your email address" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label asp-for="Password" class="form-label"></label>
-        <input asp-for="Password" class="form-control" type="password" placeholder="Enter your password" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label asp-for="ConfirmPassword" class="form-label"></label>
-        <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirm your password" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label asp-for="GovernorateId" class="form-label">Governorate</label>
-
-        <select asp-for="GovernorateId" id="governorateDropdown" class="form-select">
-            <option value="">Select your governorate</option>
-
-            @foreach (var governorate in Model.Governorates)
-            {
-                <option value="@governorate.Id">
-                    @governorate.Name
-                </option>
-            }
-        </select>
-
-        <span asp-validation-for="GovernorateId" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label asp-for="CityId" class="form-label">City</label>
-
-        <select asp-for="CityId" id="cityDropdown" class="form-select" disabled>
-            <option value="">Select your city</option>
-        </select>
-
-        <span asp-validation-for="CityId" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Register</button>
-
-</form>
-
-<div>
-    <a asp-action="Login">Already have an account? Login</a>
-</div>
+</section>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

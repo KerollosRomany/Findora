@@ -165,6 +165,14 @@ namespace Findora.Controllers
             await LoadRegisterData(modelFromRequest);
             return View("Register", modelFromRequest);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 
 }
