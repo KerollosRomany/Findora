@@ -1,4 +1,5 @@
-﻿using Findora.Models;
+﻿using Findora.Data;
+using Findora.Models;
 using Findora.Services.Interfaces;
 using Findora.ViewModels.Account;
 using Microsoft.AspNetCore.Identity;
@@ -24,6 +25,8 @@ namespace Findora.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (User.Identity?.IsAuthenticated == true)
+                return RedirectToAction("Index", "Home");
             return View("Login");
         }
 
@@ -74,6 +77,8 @@ namespace Findora.Controllers
         [HttpGet]
         public async Task<IActionResult> Register()
         {
+            if (User.Identity?.IsAuthenticated == true)
+                return RedirectToAction("Index", "Home");
             var model = new RegisterViewModel
             {
                 Governorates = await _ilocationService.GetAllGovernoratesAsync()
@@ -146,7 +151,7 @@ namespace Findora.Controllers
                 }
                 else
                 {
-                    var roleResult = await _userManager.AddToRoleAsync(appUser, "Student");
+                    var roleResult = await _userManager.AddToRoleAsync(appUser, AppRoles.Student);
                     if (!roleResult.Succeeded)
                     {
                         await _userManager.DeleteAsync(appUser);
@@ -173,6 +178,7 @@ namespace Findora.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        public IActionResult AccessDenied() => View();
     }
 
 }
