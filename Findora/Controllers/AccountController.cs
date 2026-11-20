@@ -144,7 +144,7 @@ namespace Findora.Controllers
 
                 if (!result.Succeeded)
                 {
-                    foreach (var error in result.Errors)
+                    foreach (var error in result.Errors.Where(e => e.Code != "DuplicateUserName"))
                     {
                         ModelState.AddModelError("", error.Description);
                     }
@@ -163,6 +163,7 @@ namespace Findora.Controllers
                     }
                     else
                     {
+                        TempData["Success"] = "Account created. You can log in now.";
                         return RedirectToAction("Login");
                     }
                 }

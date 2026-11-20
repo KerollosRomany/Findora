@@ -5,7 +5,8 @@ namespace Findora.ViewModels.Account
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required, StringLength(100)]
+        [Display(Name = "Full Name")]
         public string FullName { get; set; }
 
         [Required]
@@ -14,10 +15,12 @@ namespace Findora.ViewModels.Account
 
         [Required]
         [DataType(DataType.Password)]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters.")]
         public string Password { get; set; }
 
         [Required]
         [Compare(nameof(Password))]
+        [Display(Name = "Confirm password")]
         public string ConfirmPassword { get; set; }
 
         [Required]
