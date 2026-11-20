@@ -16,7 +16,7 @@ public class Place
 
     [Range(-180, 180)]
     public decimal? Longitude { get; set; }
-
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public ICollection<PlaceImage> PlaceImages { get; set; } = new List<PlaceImage>();
     public ICollection<PlaceWorkingHour> WorkingHours { get; set; } = new List<PlaceWorkingHour>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();

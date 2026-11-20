@@ -24,6 +24,8 @@ public class PlaceConfiguration : IEntityTypeConfiguration<Place>
         builder.Property(x => x.Type)
             .IsRequired();
 
+        builder.Property(x => x.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
+
         builder.Property(x => x.Latitude)
             .HasPrecision(9, 6);
 
