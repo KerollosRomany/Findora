@@ -28,6 +28,7 @@ namespace Findora
                 }).AddEntityFrameworkStores<AppDbContext>();
 
             builder.Services.AddScoped<ILocationService, LocationService>();
+            builder.Services.AddScoped<IPlaceService, PlaceService>();
 
             var app = builder.Build();
 

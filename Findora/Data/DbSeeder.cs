@@ -26,6 +26,7 @@ public static class DbSeeder
         await SeedAdminAsync(userManager, configuration);
         await SeedLocationsAsync(context);
         await SeedAmenitiesAsync(context);
+        await PlaceSeeder.SeedAsync(context);
     }
 
     private static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)

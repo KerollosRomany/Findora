@@ -1,8 +1,254 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@using Findora.Enums
+@using System.Globalization
+@model Findora.ViewModels.Home.HomeViewModel
+
+@{
+    ViewData["Title"] = "Find your perfect study spot";
+
+    var isAuth = User.Identity?.IsAuthenticated ?? false;
+    var isAdmin = isAuth && User.IsInRole("Admin");
+
+    // Icons + colours for the "Browse by governorate" tiles.
+    string[] tileIcons = { "buildings", "water", "sun", "bank", "geo-alt", "mortarboard" };
+
+    (string Label, string Icon) TypeInfo(PlaceType type) => type switch
+    {
+        PlaceType.Cafe => ("Café", "cup-hot"),
+        PlaceType.Library => ("Library", "book"),
+        PlaceType.WorkSpace => ("Workspace", "laptop"),
+        _ => (type.ToString(), "geo-alt")
+    };
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="hero">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-11 col-xl-10">
+                <span class="hero-eyebrow"><i class="bi bi-geo-alt-fill"></i> Study spots across Egypt</span>
+                <h1 class="mt-4">Find the perfect place to <span class="accent">study</span>, in minutes.</h1>
+                <p class="hero-lead mx-auto mt-3">
+                    Findora brings cafés, libraries, study spaces and co-working spaces together in one place,
+                    with real photos, facilities and reviews from students like you.
+                </p>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mt-5">
+            <div class="col-xl-10">
+                @* GET form: the Explore page will read q, GovernorateId and CityId from the URL. *@
+                <form class="search-card" asp-controller="Places" asp-action="Index" method="get">
+                    <div class="search-grid">
+                        <div class="search-seg">
+                            <label for="q">Place</label>
+                            <input id="q" name="q" class="form-control" placeholder="Search by name" autocomplete="off" />
+                        </div>
+
+                        <div class="search-seg">
+                            <label for="homeGovernorate">Governorate</label>
+                            <select asp-for="GovernorateId" id="homeGovernorate" class="form-select">
+                                <option value="">Any governorate</option>
+                                @foreach (var governorate in Model.Governorates)
+                                {
+                                    <option value="@governorate.Id">@governorate.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="search-seg">
+                            <label for="homeCity">City</label>
+                            @* home.js fills this list when a governorate is picked. *@
+                            <select asp-for="CityId" id="homeCity" class="form-select" disabled="@(!Model.GovernorateId.HasValue)">
+                                <option value="">@(Model.GovernorateId.HasValue ? "Any city" : "Select a governorate first")</option>
+                                @foreach (var city in Model.Cities)
+                                {
+                                    <option value="@city.Id">@city.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <button class="btn btn-primary btn-search" type="submit">
+                            <i class="bi bi-search"></i><span>Search</span>
+                        </button>
+                    </div>
+                </form>
+
+                @if (Model.Governorates.Any())
+                {
+                    <div class="hero-chips">
+                        <span>Popular:</span>
+                        @foreach (var governorate in Model.Governorates.Take(4))
+                        {
+                            <a class="chip-link" asp-controller="Places" asp-action="Index" asp-route-governorateId="@governorate.Id">
+                                <i class="bi bi-geo-alt"></i>@governorate.Name
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <h2 class="section-title">Latest places</h2>
+                <p class="section-sub">Newly added study spots, picked for students.</p>
+            </div>
+            <a class="link-arrow" asp-controller="Places" asp-action="Index">View all places <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        @if (!Model.LatestPlaces.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-geo-alt"></i>
+                <h3 class="h5 mt-3">No places available yet</h3>
+                <p class="mb-0">New study spots are added by our team. Check back soon.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var place in Model.LatestPlaces)
+                {
+                    var type = TypeInfo(place.Type);
+                    <div class="col-sm-6 col-lg-4 col-xl-3">
+                        <article class="place-card">
+                            <div class="place-media">
+                                @if (!string.IsNullOrWhiteSpace(place.MainImageUrl))
+                                {
+                                    <img src="@place.MainImageUrl" alt="@place.Name" loading="lazy" />
+                                }
+                                else
+                                {
+                                    <div class="ph ph-@((place.Id % 6) + 1)"><i class="bi bi-@type.Icon"></i></div>
+                                }
+                                <span class="place-badge"><i class="bi bi-@type.Icon"></i>@type.Label</span>
+                            </div>
+                            <div class="place-body">
+                                @* No route yet: the link starts working when PlacesController.Details exists. *@
+                                <h3 class="place-title">
+                                    <a class="stretched-link" asp-controller="Places" asp-action="Details" asp-route-id="@place.Id">@place.Name</a>
+                                </h3>
+                                <div class="place-meta"><i class="bi bi-geo-alt"></i>@place.CityName, @place.GovernorateName</div>
+                                <div class="place-foot">
+                                    @if (place.AverageRating > 0)
+                                    {
+                                        <span class="rating"><i class="bi bi-star-fill"></i>@place.AverageRating.ToString("0.0", CultureInfo.InvariantCulture)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="rating"><i class="bi bi-star"></i>New</span>
+                                    }
+
+                                    @if (place.IsOpenNow == true)
+                                    {
+                                        <span class="status status-open">Open now</span>
+                                    }
+                                    else if (place.IsOpenNow == false)
+                                    {
+                                        <span class="status status-closed">Closed</span>
+                                    }
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@if (Model.Governorates.Any())
+{
+    <section class="section bg-soft">
+        <div class="container">
+            <div class="section-head">
+                <div>
+                    <h2 class="section-title">Browse by governorate</h2>
+                    <p class="section-sub">Start from where you study.</p>
+                </div>
+            </div>
+            <div class="row g-3 g-lg-4">
+                @{ var tileIndex = 0; }
+                @foreach (var governorate in Model.Governorates.Take(6))
+                {
+                    var tileClass = tileIndex == 0 ? "" : $"c{tileIndex + 1}";
+                    <div class="col-6 col-md-4 col-xl-2">
+                        <a class="city-tile @tileClass" asp-controller="Places" asp-action="Index" asp-route-governorateId="@governorate.Id">
+                            <i class="bi bi-@tileIcons[tileIndex % tileIcons.Length] bg-icon"></i>
+                            <div>
+                                <h3>@governorate.Name</h3>
+                                <small>Explore places</small>
+                            </div>
+                        </a>
+                    </div>
+                    tileIndex++;
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<section class="section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title">How Findora works</h2>
+            <p class="section-sub">From “where should I study?” to “see you there” in three steps.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="step">
+                    <div class="step-icon"><i class="bi bi-search"></i></div>
+                    <h3>Search</h3>
+                    <p>Pick your governorate and city, or search by name, and filter by the facilities you need.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step">
+                    <div class="step-icon"><i class="bi bi-images"></i></div>
+                    <h3>Compare</h3>
+                    <p>Check photos, opening hours, facilities and honest reviews from other students.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="step">
+                    <div class="step-icon"><i class="bi bi-heart"></i></div>
+                    <h3>Save &amp; share</h3>
+                    <p>Save favourites, leave a review, and suggest places we have not listed yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (!isAdmin)
+{
+    <section class="section pt-0">
+        <div class="container">
+            <div class="cta">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-8">
+                        <h2>Know a great study spot we are missing?</h2>
+                        <p class="mt-2">Suggest it in a minute. Our team reviews every suggestion and adds it for all students.</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        @if (isAuth)
+                        {
+                            <a class="btn btn-white btn-lg" asp-controller="Suggestions" asp-action="Create"><i class="bi bi-plus-lg me-1"></i> Suggest a place</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-white btn-lg" asp-controller="Account" asp-action="Register"><i class="bi bi-person-plus me-1"></i> Join to suggest</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script src="~/js/home.js" asp-append-version="true"></script>
+}
