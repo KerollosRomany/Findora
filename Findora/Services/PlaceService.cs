@@ -114,8 +114,9 @@ namespace Findora.Services
             return (now.DayOfWeek, TimeOnly.FromDateTime(now));
         }
 
-        public async Task<PlaceDetailsViewModel?> GetDetailsAsync(int placeId)
+        public async Task<PlaceDetailsViewModel?> GetDetailsAsync(int placeId, string? currentUserId)
         {
+
             var place = await _context.Places
                 .AsNoTracking()
                 .Where(p => p.Id == placeId)
@@ -159,7 +160,14 @@ namespace Findora.Services
 
             if (place == null)
                 return null;
-
+            if (currentUserId != null)
+            {
+                place.CurrentUserReviewId = await _context.Reviews
+                    .AsNoTracking()
+                    .Where(r => r.UserId == currentUserId && r.PlaceId == placeId)
+                    .Select(r => (int?)r.Id)
+                    .FirstOrDefaultAsync();
+            }
             // WorkingHours 
             var hours = await _context.WorkingHours
                 .AsNoTracking()

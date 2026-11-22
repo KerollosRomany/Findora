@@ -18,7 +18,7 @@ namespace Findora.ViewModels.Places
         public List<string> Amenities { get; set; } = new();
         public List<WorkingHourViewModel> WorkingHours { get; set; } = new();
         public List<ReviewViewModel> Reviews { get; set; } = new();
-
+        public int? CurrentUserReviewId { get; set; }
         public bool? IsOpenNow { get; set; }
         public double AverageRating { get; set; }
         public int ReviewsCount { get; set; }

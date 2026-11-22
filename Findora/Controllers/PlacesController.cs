@@ -1,5 +1,6 @@
 ﻿using Findora.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Findora.Controllers
 {
@@ -14,9 +15,10 @@ namespace Findora.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var place = await _placeService.GetDetailsAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var place = await _placeService.GetDetailsAsync(id, userId);
             if (place == null) return NotFound();
-            return View (place);
+            return View(place);
         }
     }
 }

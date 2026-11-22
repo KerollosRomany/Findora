@@ -7,6 +7,6 @@ namespace Findora.Services.Interfaces
         Task<List<PlaceCardViewModel>> GetLatestPlacesAsync(int count);
 
         Task<List<PlaceCardViewModel>> SearchPlacesAsync(int? governorateId, int? cityId);
-        Task<PlaceDetailsViewModel?> GetDetailsAsync(int placeId);
+        Task<PlaceDetailsViewModel?> GetDetailsAsync(int placeId, string? currentUserId);
     }
 }

@@ -94,8 +94,7 @@
             @for (var i = 0; i < gallery.Count; i++)
             {
                 <button type="button" class="g-item @(i == 0 ? "g-main" : "")" data-bs-toggle="modal"
-                        data-bs-target="#photoModal" data-gallery-index="@i" aria-label="Open photo @(i + 1)"
-                        style="--bg-img:url('@gallery[i]')">
+                        data-bs-target="#photoModal" data-gallery-index="@i" aria-label="Open photo @(i + 1)">
                     <img src="@gallery[i]" alt="@Model.Name photo @(i + 1)" loading="@(i == 0 ? "eager" : "lazy")" />
                 </button>
             }
@@ -236,7 +235,50 @@
                         <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Log in</a>
                     </div>
                 }
-                @* Logged-in students: the "Write a review" form goes here in the next step. *@
+                else if (User.IsInRole("Student"))
+                {
+                    if (Model.CurrentUserReviewId.HasValue)
+                    {
+                        <div class="review-form mt-4">
+                            <h3 class="h5 mb-2">Your review</h3>
+                            <p class="mb-0 text-muted-2"><i class="bi bi-check-circle-fill text-success me-1"></i> You already reviewed this place. Thank you for sharing your experience!</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <form class="review-form mt-4" method="post" asp-controller="Reviews" asp-action="Create">
+                            <h3 class="h5 mb-3">Write a review</h3>
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="PlaceId" value="@Model.Id" />
+
+                            <div class="mb-3">
+                                <label class="form-label d-block">Your rating</label>
+                                <div class="star-input" role="radiogroup" aria-label="Rating">
+                                    @for (var s = 5; s >= 1; s--)
+                                    {
+                                        <input type="radio" name="Rating" id="rating-@s" value="@s" required />
+                                        <label for="rating-@s" title="@s star@(s == 1 ? "" : "s")"><i class="bi bi-star-fill"></i></label>
+                                    }
+                                </div>
+                                <span class="field-validation-valid text-danger" data-valmsg-for="Rating" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="review-title">Title</label>
+                                <input class="form-control" id="review-title" name="Title" maxlength="150" placeholder="Sum it up in a few words" data-val="true" data-val-required="The Title field is required." data-val-length="Title must be at most 150 characters." data-val-length-max="150" />
+                                <span class="field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="review-comment">Your experience</label>
+                                <textarea class="form-control" id="review-comment" name="Comment" rows="4" maxlength="2000" placeholder="Is it quiet? Is the Wi-Fi good? Enough power outlets?" data-val="true" data-val-required="The Comment field is required." data-val-length="Comment must be at most 2000 characters." data-val-length-max="2000"></textarea>
+                                <span class="field-validation-valid" data-valmsg-for="Comment" data-valmsg-replace="true"></span>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary"><i class="bi bi-send me-1"></i> Submit review</button>
+                        </form>
+                    }
+                }
             </section>
         </div>
 
@@ -296,4 +338,8 @@
             </div>
         </div>
     </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

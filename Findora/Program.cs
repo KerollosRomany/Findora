@@ -29,6 +29,7 @@ namespace Findora
 
             builder.Services.AddScoped<ILocationService, LocationService>();
             builder.Services.AddScoped<IPlaceService, PlaceService>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
             var app = builder.Build();
 
