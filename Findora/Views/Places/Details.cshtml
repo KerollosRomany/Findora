@@ -1,0 +1,299 @@
+@using Findora.Enums
+@using Findora.ViewModels.Places
+@using System.Globalization
+@model PlaceDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+
+    var isAuth = User.Identity?.IsAuthenticated ?? false;
+    var inv = CultureInfo.InvariantCulture;
+
+    // ---------- small helpers (view only, no business logic) ----------
+    (string Label, string Icon) TypeInfo(PlaceType type) => type switch
+    {
+        PlaceType.Cafe => ("Café", "cup-hot"),
+        PlaceType.Library => ("Library", "book"),
+        PlaceType.WorkSpace => ("Workspace", "laptop"),
+        _ => (type.ToString(), "geo-alt")
+    };
+
+    string AmenityIcon(string name) => name switch
+    {
+        "Wi-Fi" => "wifi",
+        "Air Conditioning" => "snow",
+        "Quiet Area" => "volume-mute",
+        "Drinks" => "cup-hot",
+        "Meeting Room" => "people",
+        "Printing & Copying" => "printer",
+        _ => "check-circle"
+    };
+
+    string TimeText(TimeOnly? t) => t.HasValue ? t.Value.ToString("h:mm tt", inv) : "";
+
+    string HoursText(IEnumerable<WorkingHourViewModel> rows)
+    {
+        var open = rows
+            .Where(r => !r.IsClosed && r.OpenTime.HasValue && r.CloseTime.HasValue)
+            .OrderBy(r => r.OpenTime)
+            .ToList();
+
+        if (open.Count == 0) return "Closed";
+        if (open.Count == 1 && open[0].OpenTime == open[0].CloseTime) return "Open 24 hours";
+        return string.Join(", ", open.Select(r => $"{TimeText(r.OpenTime)} – {TimeText(r.CloseTime)}"));
+    }
+
+    var placeType = TypeInfo(Model.Type);
+    var images = Model.ImageUrls;
+    var gallery = images.Take(5).ToList();
+
+    // One line per day (a day can have two periods)
+    var hoursByDay = Model.WorkingHours.GroupBy(h => h.Day).ToList();
+    var todayGroup = hoursByDay.FirstOrDefault(g => g.Any(h => h.IsToday));
+    var todayText = todayGroup == null ? null : HoursText(todayGroup);
+
+    var hasMap = Model.Latitude.HasValue && Model.Longitude.HasValue;
+    var lat = hasMap ? Model.Latitude!.Value.ToString(inv) : "";
+    var lng = hasMap ? Model.Longitude!.Value.ToString(inv) : "";
+}
+
+<div class="container py-4">
+    <nav class="breadcrumbs mb-3" aria-label="Breadcrumb">
+        <a asp-controller="Home" asp-action="Index">Home</a>
+        <i class="bi bi-chevron-right small"></i>
+        <a asp-controller="Places" asp-action="Index">Explore</a>
+        <i class="bi bi-chevron-right small"></i>
+        <span>@Model.CityName, @Model.GovernorateName</span>
+        <i class="bi bi-chevron-right small"></i>
+        <span>@Model.Name</span>
+    </nav>
+
+    <div class="mb-4">
+        <h1 class="place-title-lg">@Model.Name</h1>
+        <div class="d-flex flex-wrap align-items-center gap-3 mt-2 text-muted-2">
+            @if (Model.ReviewsCount > 0)
+            {
+                <span class="rating">
+                    <i class="bi bi-star-fill"></i>@Model.AverageRating.ToString("0.0", inv)
+                    <small>(@Model.ReviewsCount @(Model.ReviewsCount == 1 ? "review" : "reviews"))</small>
+                </span>
+            }
+            else
+            {
+                <span class="rating"><i class="bi bi-star"></i>New</span>
+            }
+            <span class="chip"><i class="bi bi-@placeType.Icon"></i>@placeType.Label</span>
+            <span><i class="bi bi-geo-alt me-1"></i>@Model.CityName, @Model.GovernorateName</span>
+        </div>
+    </div>
+
+    @* ---------- Photos ---------- *@
+    @if (gallery.Count > 0)
+    {
+        <div class="gallery has-@gallery.Count">
+            @for (var i = 0; i < gallery.Count; i++)
+            {
+                <button type="button" class="g-item @(i == 0 ? "g-main" : "")" data-bs-toggle="modal"
+                        data-bs-target="#photoModal" data-gallery-index="@i" aria-label="Open photo @(i + 1)"
+                        style="--bg-img:url('@gallery[i]')">
+                    <img src="@gallery[i]" alt="@Model.Name photo @(i + 1)" loading="@(i == 0 ? "eager" : "lazy")" />
+                </button>
+            }
+            @if (images.Count > 1)
+            {
+                <button type="button" class="btn btn-white btn-sm btn-show-all" data-bs-toggle="modal"
+                        data-bs-target="#photoModal" data-gallery-index="0">
+                    <i class="bi bi-grid-3x3-gap me-1"></i> Show all photos (@images.Count)
+                </button>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="gallery has-1">
+            <div class="g-item g-main" style="cursor:default"><div class="ph ph-1"><i class="bi bi-@placeType.Icon"></i></div></div>
+        </div>
+    }
+
+    <div class="row gy-4 gx-lg-5 mt-1">
+        <div class="col-lg-8">
+            <section class="block">
+                <h2>About this place</h2>
+                <p class="mb-0">@Model.Description</p>
+            </section>
+
+            @if (Model.Amenities.Any())
+            {
+                <section class="block">
+                    <h2>Facilities</h2>
+                    <div class="amenity-grid">
+                        @foreach (var amenity in Model.Amenities)
+                        {
+                            <div class="amenity"><i class="bi bi-@AmenityIcon(amenity)"></i>@amenity</div>
+                        }
+                    </div>
+                </section>
+            }
+
+            <section class="block">
+                <h2>Opening hours</h2>
+                @if (hoursByDay.Count == 0)
+                {
+                    <p class="text-muted-2 mb-0">Opening hours are not available for this place yet.</p>
+                }
+                else
+                {
+                    <div style="max-width:28rem">
+                        @foreach (var day in hoursByDay)
+                        {
+                            var text = HoursText(day);
+                            <div class="hours-row @(day.Any(h => h.IsToday) ? "today" : "")">
+                                <span>@day.Key</span>
+                                <span class="@(text == "Closed" ? "closed" : "")">@text</span>
+                            </div>
+                        }
+                    </div>
+                }
+            </section>
+
+            @if (hasMap)
+            {
+                <section class="block">
+                    <h2>Location</h2>
+                    <p class="text-muted-2">@Model.Address</p>
+                    <div class="ratio ratio-16x9 rounded-4 overflow-hidden border">
+                        <iframe src="https://www.google.com/maps?q=@lat,@lng&amp;output=embed"
+                                title="Map of @Model.Name" style="border:0" loading="lazy" allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </section>
+            }
+
+            <section class="block" id="reviews">
+                <h2>Reviews</h2>
+
+                @if (Model.ReviewsCount > 0)
+                {
+                    <div class="review-summary mb-3">
+                        <div class="text-center">
+                            <div class="score">@Model.AverageRating.ToString("0.0", inv)</div>
+                            <div class="stars my-2 justify-content-center">
+                                @for (var s = 1; s <= 5; s++)
+                                {
+                                    <i class="bi bi-star-fill @(s > Math.Round(Model.AverageRating) ? "off" : "")"></i>
+                                }
+                            </div>
+                            <div class="text-muted-2 small">@Model.ReviewsCount @(Model.ReviewsCount == 1 ? "review" : "reviews")</div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            @for (var star = 5; star >= 1; star--)
+                            {
+                                var count = Model.Reviews.Count(r => r.Rating == star);
+                                var percent = Model.Reviews.Count == 0 ? 0 : count * 100 / Model.Reviews.Count;
+                                <div class="bar-row">
+                                    <span>@star</span>
+                                    <div class="bar"><span style="width:@percent%"></span></div>
+                                    <span>@count</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <div class="review">
+                            <span class="f-avatar">@(string.IsNullOrEmpty(review.UserName) ? "?" : review.UserName[..1].ToUpperInvariant())</span>
+                            <div>
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="review-name">@review.UserName</span>
+                                    <span class="review-date">@review.CreatedAt.ToString("MMMM yyyy", inv)</span>
+                                </div>
+                                <div class="stars mt-1">
+                                    @for (var s = 1; s <= 5; s++)
+                                    {
+                                        <i class="bi bi-star-fill @(s > review.Rating ? "off" : "")"></i>
+                                    }
+                                </div>
+                                @if (!string.IsNullOrWhiteSpace(review.Title))
+                                {
+                                    <div class="review-title">@review.Title</div>
+                                }
+                                <p>@review.Comment</p>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="text-muted-2">No reviews yet. Be the first to share your experience.</p>
+                }
+
+                @if (!isAuth)
+                {
+                    <div class="review-form mt-4">
+                        <h3 class="h5 mb-2">Write a review</h3>
+                        <p class="mb-3 text-muted-2">Log in to share your experience with other students.</p>
+                        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Log in</a>
+                    </div>
+                }
+                @* Logged-in students: the "Write a review" form goes here in the next step. *@
+            </section>
+        </div>
+
+        <div class="col-lg-4">
+            <aside class="info-card">
+                @if (Model.IsOpenNow == true)
+                {
+                    <div class="mb-2"><span class="status status-open">Open now</span></div>
+                }
+                else if (Model.IsOpenNow == false)
+                {
+                    <div class="mb-2"><span class="status status-closed">Closed now</span></div>
+                }
+
+                <div class="info-row"><i class="bi bi-geo-alt"></i><div><strong>Address</strong><small>@Model.Address</small></div></div>
+                @if (todayText != null)
+                {
+                    <div class="info-row"><i class="bi bi-clock"></i><div><strong>Today</strong><small>@todayText</small></div></div>
+                }
+                <div class="info-row"><i class="bi bi-buildings"></i><div><strong>Location</strong><small>@Model.CityName, @Model.GovernorateName</small></div></div>
+
+                @if (hasMap)
+                {
+                    <a class="btn btn-primary w-100 mt-2" target="_blank" rel="noopener"
+                       href="https://www.google.com/maps/dir/?api=1&amp;destination=@lat,@lng">
+                        <i class="bi bi-sign-turn-right me-1"></i> Get directions
+                    </a>
+                }
+                <a class="btn btn-soft w-100 mt-2" href="#reviews"><i class="bi bi-chat-square-text me-1"></i> Reviews</a>
+            </aside>
+        </div>
+    </div>
+</div>
+
+@* ---------- Photo viewer (opens when a photo is clicked) ---------- *@
+@if (images.Count > 0)
+{
+    <div class="modal fade photo-modal" id="photoModal" tabindex="-1" aria-label="Photos" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div id="photoCarousel" class="carousel slide" data-bs-ride="false">
+                    <div class="carousel-inner">
+                        @for (var i = 0; i < images.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@images[i]" alt="@Model.Name photo @(i + 1)" loading="lazy" />
+                            </div>
+                        }
+                    </div>
+                    @if (images.Count > 1)
+                    {
+                        <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

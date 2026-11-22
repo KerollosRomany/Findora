@@ -113,5 +113,78 @@ namespace Findora.Services
             var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
             return (now.DayOfWeek, TimeOnly.FromDateTime(now));
         }
+
+        public async Task<PlaceDetailsViewModel?> GetDetailsAsync(int placeId)
+        {
+            var place = await _context.Places
+                .AsNoTracking()
+                .Where(p => p.Id == placeId)
+                .Select(p => new PlaceDetailsViewModel
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Type = p.Type,
+                    Address = p.Address,
+                    Description = p.Description,
+                    Latitude = p.Latitude,
+                    Longitude = p.Longitude,
+                    CityName = p.City.Name,
+                    GovernorateName = p.City.Governorate.Name,
+
+                    ImageUrls = p.PlaceImages
+                        .OrderByDescending(i => i.IsMain)
+                        .Select(i => i.ImgURL)
+                        .ToList(),
+
+                    Amenities = p.PlaceAmenities
+                        .Select(pa => pa.Amenity.Name)
+                        .ToList(),
+
+                    Reviews = p.Reviews
+                        .OrderByDescending(r => r.CreatedAt)
+                        .Select(r => new ReviewViewModel
+                        {
+                            UserName = r.User.FullName,
+                            Rating = r.Rating,
+                            Comment = r.Comment,
+                            Title = r.Title,
+                            CreatedAt = r.CreatedAt
+                        })
+                        .ToList(),
+                 
+                    AverageRating = p.Reviews.Average(r => (double?)r.Rating) ?? 0,
+                    ReviewsCount = p.Reviews.Count()
+                })
+                .FirstOrDefaultAsync();
+
+            if (place == null)
+                return null;
+
+            // WorkingHours 
+            var hours = await _context.WorkingHours
+                .AsNoTracking()
+                .Where(h => h.PlaceId  == placeId)
+                .ToListAsync();
+
+            var (day, time) = GetEgyptNow();
+            var yesterday = (DayOfWeek)(((int)day + 6) % 7);
+
+            place.IsOpenNow = CalculateIsOpenNow(hours, day, yesterday, time);
+            place.AverageRating = Math.Round(place.AverageRating, 1);
+            // Egypt week order: Saturday first, Friday last
+            place.WorkingHours = hours
+                .OrderBy(h => ((int)h.Day + 1) % 7)
+                .ThenBy(h => h.OpenTime)
+                .Select(h => new WorkingHourViewModel
+                {
+                    Day = h.Day,
+                    IsClosed = h.IsClosed,
+                    OpenTime = h.OpenTime,
+                    CloseTime = h.CloseTime,
+                    IsToday = h.Day == day
+                })
+                .ToList();
+            return place;
+        }
     }
 }

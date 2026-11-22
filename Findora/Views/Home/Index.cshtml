@@ -115,7 +115,7 @@
                     var type = TypeInfo(place.Type);
                     <div class="col-sm-6 col-lg-4 col-xl-3">
                         <article class="place-card">
-                            <div class="place-media">
+                            <div class="place-media" style="@(string.IsNullOrWhiteSpace(place.MainImageUrl) ? "" : $"--bg-img:url('{place.MainImageUrl}')")">
                                 @if (!string.IsNullOrWhiteSpace(place.MainImageUrl))
                                 {
                                     <img src="@place.MainImageUrl" alt="@place.Name" loading="lazy" />
