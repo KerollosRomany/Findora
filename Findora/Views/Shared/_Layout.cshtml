@@ -72,7 +72,8 @@
                     <div class="nav-actions d-flex align-items-lg-center gap-2">
                         @if (!isAuth)
                         {
-                            <a class="btn btn-ghost" asp-controller="Account" asp-action="Login">Log in</a>
+                            <a class="btn btn-ghost" asp-controller="Account" asp-action="Login"
+                               asp-route-returnUrl="@Context.Request.Path">Log in</a>
                             <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Sign up</a>
                         }
                         else
@@ -166,7 +167,8 @@
                             }
                             else
                             {
-                                <li><a asp-controller="Account" asp-action="Login">Log in</a></li>
+                                <li><a asp-controller="Account" asp-action="Login"
+                                    asp-route-returnUrl="@Context.Request.Path">Log in</a></li>
                                 <li><a asp-controller="Account" asp-action="Register">Sign up</a></li>
                             }
                         </ul>

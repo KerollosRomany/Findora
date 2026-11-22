@@ -23,16 +23,17 @@ namespace Findora.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string? returnUrl)
         {
             if (User.Identity?.IsAuthenticated == true)
                 return RedirectToAction("Index", "Home");
+            ViewData["ReturnUrl"] = returnUrl;
             return View("Login");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveLogin(LoginViewModel modelFromRequest)
+        public async Task<IActionResult> SaveLogin(LoginViewModel modelFromRequest, string? returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -47,11 +48,14 @@ namespace Findora.Controllers
                         lockoutOnFailure: true);
                     if (found.Succeeded)
                     {
+                        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                            return LocalRedirect(returnUrl);
                         return RedirectToAction("Index", "Home");
                     }
                 }
                 ModelState.AddModelError("", "Wrong Email Or Password");
             }
+            ViewData["ReturnUrl"] = returnUrl;
             return View("Login", modelFromRequest);
         }
 

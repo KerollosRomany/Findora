@@ -7,7 +7,7 @@ namespace Findora.Services.Interfaces
         Success,
         PlaceNotFound,
         AlreadyReviewed
-    };
+    }
 
     public interface IReviewService
     {

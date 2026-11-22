@@ -568,32 +568,32 @@ textarea.form-control { min-height: 120px; resize: vertical; }
     isolation: isolate;
 }
 
-    .g-item::before {
-        content: "";
-        position: absolute;
-        inset: -24px;
-        background-image: var(--bg-img, none);
-        background-size: cover;
-        background-position: center;
-        filter: blur(24px) brightness(.92);
-        z-index: -1;
-    }
+.g-item::before {
+    content: "";
+    position: absolute;
+    inset: -24px;
+    background-image: var(--bg-img, none);
+    background-size: cover;
+    background-position: center;
+    filter: blur(24px) brightness(.92);
+    z-index: -1;
+}
 
-    .g-item img {
-        object-fit: contain;
-    }
+.g-item img {
+    object-fit: contain;
+}
 /* Place cards: show the whole photo, fill the empty space with a blurred copy */
 .place-media {
     isolation: isolate;
 }
 
-    .place-media::before {
-        content: "";
-        position: absolute;
-        inset: -24px;
-        background-image: var(--bg-img, none);
-        background-size: cover;
-        background-position: center;
-        filter: blur(24px) brightness(.92);
-        z-index: -1;
-    }
+.place-media::before {
+    content: "";
+    position: absolute;
+    inset: -24px;
+    background-image: var(--bg-img, none);
+    background-size: cover;
+    background-position: center;
+    filter: blur(24px) brightness(.92);
+    z-index: -1;
+}

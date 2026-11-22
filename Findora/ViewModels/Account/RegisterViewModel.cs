@@ -10,6 +10,7 @@ namespace Findora.ViewModels.Account
         public string FullName { get; set; }
 
         [Required]
+        [StringLength(256)]
         [EmailAddress]
         public string Email { get; set; }
 

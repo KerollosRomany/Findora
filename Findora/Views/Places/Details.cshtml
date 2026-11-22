@@ -94,7 +94,8 @@
             @for (var i = 0; i < gallery.Count; i++)
             {
                 <button type="button" class="g-item @(i == 0 ? "g-main" : "")" data-bs-toggle="modal"
-                        data-bs-target="#photoModal" data-gallery-index="@i" aria-label="Open photo @(i + 1)">
+                        data-bs-target="#photoModal" data-gallery-index="@i" aria-label="Open photo @(i + 1)"
+                        style="--bg-img:url('@gallery[i]')">
                     <img src="@gallery[i]" alt="@Model.Name photo @(i + 1)" loading="@(i == 0 ? "eager" : "lazy")" />
                 </button>
             }
@@ -232,7 +233,8 @@
                     <div class="review-form mt-4">
                         <h3 class="h5 mb-2">Write a review</h3>
                         <p class="mb-3 text-muted-2">Log in to share your experience with other students.</p>
-                        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Log in</a>
+                        <a class="btn btn-primary" asp-controller="Account" asp-action="Login"
+                           asp-route-returnUrl="@(Context.Request.Path + "#reviews")">Log in</a>
                     </div>
                 }
                 else if (User.IsInRole("Student"))
