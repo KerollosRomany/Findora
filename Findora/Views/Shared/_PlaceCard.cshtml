@@ -1,0 +1,52 @@
+@using Findora.Enums
+@using System.Globalization
+@model Findora.ViewModels.Places.PlaceCardViewModel
+
+@{
+    (string Label, string Icon) type = Model.Type switch
+    {
+        PlaceType.Cafe => ("Café", "cup-hot"),
+        PlaceType.Library => ("Library", "book"),
+        PlaceType.WorkSpace => ("Workspace", "laptop"),
+        _ => (Model.Type.ToString(), "geo-alt")
+    };
+}
+
+<article class="place-card">
+    <div class="place-media" style="@(string.IsNullOrWhiteSpace(Model.MainImageUrl) ? "" : $"--bg-img:url('{Model.MainImageUrl}')")">
+        @if (!string.IsNullOrWhiteSpace(Model.MainImageUrl))
+        {
+            <img src="@Model.MainImageUrl" alt="@Model.Name" loading="lazy" />
+        }
+        else
+        {
+            <div class="ph ph-@((Model.Id % 6) + 1)"><i class="bi bi-@type.Icon"></i></div>
+        }
+        <span class="place-badge"><i class="bi bi-@type.Icon"></i>@type.Label</span>
+    </div>
+    <div class="place-body">
+        <h3 class="place-title">
+            <a class="stretched-link" asp-controller="Places" asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a>
+        </h3>
+        <div class="place-meta"><i class="bi bi-geo-alt"></i>@Model.CityName, @Model.GovernorateName</div>
+        <div class="place-foot">
+            @if (Model.AverageRating > 0)
+            {
+                <span class="rating"><i class="bi bi-star-fill"></i>@Model.AverageRating.ToString("0.0", CultureInfo.InvariantCulture)</span>
+            }
+            else
+            {
+                <span class="rating"><i class="bi bi-star"></i>New</span>
+            }
+
+            @if (Model.IsOpenNow == true)
+            {
+                <span class="status status-open">Open now</span>
+            }
+            else if (Model.IsOpenNow == false)
+            {
+                <span class="status status-closed">Closed</span>
+            }
+        </div>
+    </div>
+</article>

@@ -1,7 +1,9 @@
 ﻿using Findora.Data;
 using Findora.Models;
 using Findora.Services.Interfaces;
+using Findora.ViewModels.ExplorePage;
 using Findora.ViewModels.Places;
+using Findora.ViewModels.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Findora.Services
@@ -20,24 +22,48 @@ namespace Findora.Services
             var query = _context.Places
                 .AsNoTracking()
                 .OrderByDescending(p => p.CreatedAt)
+                .ThenBy(p => p.Id)
                 .Take(count);
 
             return await ToCardsAsync(query);
         }
 
-        public async Task<List<PlaceCardViewModel>> SearchPlacesAsync(int? governorateId, int? cityId)
+
+        public async Task<PagedResult<PlaceCardViewModel>> SearchAsync(ExploreFilterViewModel filter, int pageSize)
         {
             var query = _context.Places.AsNoTracking();
 
-            // City wins if both are sent
-            if (cityId.HasValue)
-                query = query.Where(p => p.CityId == cityId.Value);
-            else if (governorateId.HasValue)
-                query = query.Where(p => p.City.GovernorateId == governorateId.Value);
+            if (!string.IsNullOrWhiteSpace(filter.PlaceName))
+            {
+                query = query.Where(p => p.Name.Contains(filter.PlaceName));
+            }
 
-            query = query.OrderByDescending(p => p.CreatedAt);
+            if (filter.CityId.HasValue)
+                query = query.Where(p => p.CityId == filter.CityId.Value);
 
-            return await ToCardsAsync(query);
+            else if (filter.GovernorateId.HasValue)
+                query = query.Where(p => p.City.GovernorateId == filter.GovernorateId.Value);
+
+            foreach (var amenityId in filter.SelectedAmenityIds)
+            {
+                query = query.Where(p => p.PlaceAmenities.Any(pa => pa.AmenityId == amenityId));
+            }
+
+            var totalPlaces = await query.CountAsync();
+
+            filter.Page = Math.Max(1, filter.Page);
+            var page = filter.Page;
+
+            query = query.OrderByDescending(p => p.CreatedAt)
+                         .ThenBy(p => p.Id)
+                         .Skip((page - 1) * pageSize)
+                         .Take(pageSize); var results = await ToCardsAsync(query);
+
+            return new PagedResult<PlaceCardViewModel>
+            {
+                Items = results,
+                TotalCount = totalPlaces
+            };
         }
 
         private async Task<List<PlaceCardViewModel>> ToCardsAsync(IQueryable<Place> query)
@@ -116,7 +142,6 @@ namespace Findora.Services
 
         public async Task<PlaceDetailsViewModel?> GetDetailsAsync(int placeId, string? currentUserId)
         {
-
             var place = await _context.Places
                 .AsNoTracking()
                 .Where(p => p.Id == placeId)
@@ -193,6 +218,15 @@ namespace Findora.Services
                 })
                 .ToList();
             return place;
+        }
+
+        public async Task<List<LookupItemViewModel>> GetAmenitiesAsync()
+        {
+            return await _context.Amenities
+                .AsNoTracking()
+                .OrderBy(a => a.Name)
+                .Select(a => new LookupItemViewModel { Id = a.Id, Name = a.Name })
+                .ToListAsync();
         }
     }
 }

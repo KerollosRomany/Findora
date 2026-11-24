@@ -1,5 +1,4 @@
 @using Findora.Enums
-@using System.Globalization
 @model Findora.ViewModels.Home.HomeViewModel
 
 @{
@@ -35,12 +34,11 @@
 
         <div class="row justify-content-center mt-5">
             <div class="col-xl-10">
-                @* GET form: the Explore page will read q, GovernorateId and CityId from the URL. *@
                 <form class="search-card" asp-controller="Places" asp-action="Index" method="get">
                     <div class="search-grid">
                         <div class="search-seg">
                             <label for="q">Place</label>
-                            <input id="q" name="q" class="form-control" placeholder="Search by name" autocomplete="off" />
+                            <input id="q" name="PlaceName" class="form-control" placeholder="Search by name" autocomplete="off" />
                         </div>
 
                         <div class="search-seg">
@@ -112,47 +110,8 @@
             <div class="row g-4">
                 @foreach (var place in Model.LatestPlaces)
                 {
-                    var type = TypeInfo(place.Type);
                     <div class="col-sm-6 col-lg-4 col-xl-3">
-                        <article class="place-card">
-                            <div class="place-media" style="@(string.IsNullOrWhiteSpace(place.MainImageUrl) ? "" : $"--bg-img:url('{place.MainImageUrl}')")">
-                                @if (!string.IsNullOrWhiteSpace(place.MainImageUrl))
-                                {
-                                    <img src="@place.MainImageUrl" alt="@place.Name" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <div class="ph ph-@((place.Id % 6) + 1)"><i class="bi bi-@type.Icon"></i></div>
-                                }
-                                <span class="place-badge"><i class="bi bi-@type.Icon"></i>@type.Label</span>
-                            </div>
-                            <div class="place-body">
-                                @* No route yet: the link starts working when PlacesController.Details exists. *@
-                                <h3 class="place-title">
-                                    <a class="stretched-link" asp-controller="Places" asp-action="Details" asp-route-id="@place.Id">@place.Name</a>
-                                </h3>
-                                <div class="place-meta"><i class="bi bi-geo-alt"></i>@place.CityName, @place.GovernorateName</div>
-                                <div class="place-foot">
-                                    @if (place.AverageRating > 0)
-                                    {
-                                        <span class="rating"><i class="bi bi-star-fill"></i>@place.AverageRating.ToString("0.0", CultureInfo.InvariantCulture)</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="rating"><i class="bi bi-star"></i>New</span>
-                                    }
-
-                                    @if (place.IsOpenNow == true)
-                                    {
-                                        <span class="status status-open">Open now</span>
-                                    }
-                                    else if (place.IsOpenNow == false)
-                                    {
-                                        <span class="status status-closed">Closed</span>
-                                    }
-                                </div>
-                            </div>
-                        </article>
+                        <partial name="_PlaceCard" model="place" />
                     </div>
                 }
             </div>

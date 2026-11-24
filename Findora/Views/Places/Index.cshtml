@@ -1,0 +1,171 @@
+@using Findora.ViewModels.ExplorePage
+@model ExploreViewModel
+
+@{
+    ViewData["Title"] = "Explore places";
+    var f = Model.Filter;
+    var page = f.Page;
+    var totalPages = Model.TotalPages;
+
+    var hasFilters = !string.IsNullOrWhiteSpace(f.PlaceName)
+                     || f.GovernorateId.HasValue
+                     || f.CityId.HasValue
+                     || f.SelectedAmenityIds.Any();
+
+    // Same filters, different page (the pager keeps everything the student chose)
+    string PageUrl(int p)
+    {
+        var parts = new List<string>();
+        if (!string.IsNullOrWhiteSpace(f.PlaceName)) parts.Add("PlaceName=" + Uri.EscapeDataString(f.PlaceName));
+        if (f.GovernorateId.HasValue) parts.Add("GovernorateId=" + f.GovernorateId.Value);
+        if (f.CityId.HasValue) parts.Add("CityId=" + f.CityId.Value);
+        foreach (var id in f.SelectedAmenityIds) parts.Add("SelectedAmenityIds=" + id);
+        parts.Add("Page=" + p);
+        return Url.Action("Index", "Places") + "?" + string.Join("&", parts);
+    }
+
+    var firstShown = Model.TotalCount == 0 ? 0 : (page - 1) * Model.PageSize + 1;
+    var lastShown = Math.Min(page * Model.PageSize, Model.TotalCount);
+    var windowStart = Math.Max(1, page - 2);
+    var windowEnd = Math.Min(totalPages, page + 2);
+}
+
+<section class="section-sm">
+    <div class="container">
+        <div class="section-head">
+            <div>
+                <h1 class="section-title">Explore places</h1>
+                <p class="section-sub">
+                    @if (Model.TotalCount == 0)
+                    {
+                        <text>No places match your search.</text>
+                    }
+                    else
+                    {
+                        <text>Showing @firstShown–@lastShown of @Model.TotalCount @(Model.TotalCount == 1 ? "place" : "places")</text>
+                    }
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            @* ---------- Filters ---------- *@
+            <div class="col-lg-3">
+                <form class="explore-filters" asp-controller="Places" asp-action="Index" method="get">
+                    <div class="mb-3">
+                        <label class="form-label" for="exploreName">Place name</label>
+                        <input id="exploreName" name="PlaceName" value="@f.PlaceName" class="form-control" placeholder="Search by name" autocomplete="off" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="exploreGovernorate">Governorate</label>
+                        <select id="exploreGovernorate" name="GovernorateId" class="form-select">
+                            <option value="">Any governorate</option>
+                            @foreach (var g in Model.Governorates)
+                            {
+                                <option value="@g.Id" selected="@(f.GovernorateId == g.Id)">@g.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="exploreCity">City</label>
+                        <select id="exploreCity" name="CityId" class="form-select" disabled="@(!f.GovernorateId.HasValue)">
+                            <option value="">@(f.GovernorateId.HasValue ? "Any city" : "Select a governorate first")</option>
+                            @foreach (var c in Model.Cities)
+                            {
+                                <option value="@c.Id" selected="@(f.CityId == c.Id)">@c.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-label">Facilities</div>
+                        @foreach (var a in Model.Amenities)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="amenity-@a.Id"
+                                       name="SelectedAmenityIds" value="@a.Id"
+                                       checked="@f.SelectedAmenityIds.Contains(a.Id)" />
+                                <label class="form-check-label" for="amenity-@a.Id">@a.Name</label>
+                            </div>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100"><i class="bi bi-search me-1"></i> Search</button>
+                    @if (hasFilters)
+                    {
+                        <a class="btn btn-soft w-100 mt-2" asp-controller="Places" asp-action="Index">Clear filters</a>
+                    }
+                </form>
+            </div>
+
+            @* ---------- Results ---------- *@
+            <div class="col-lg-9">
+                @if (!Model.PlaceCards.Any())
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-search"></i>
+                        <h3 class="h5 mt-3">No places found</h3>
+                        <p class="mb-0">Try removing a filter or searching for another name.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="row g-4">
+                        @foreach (var place in Model.PlaceCards)
+                        {
+                            <div class="col-sm-6 col-xl-4">
+                                <partial name="_PlaceCard" model="place" />
+                            </div>
+                        }
+                    </div>
+
+                    @if (totalPages > 1)
+                    {
+                        <nav class="mt-5" aria-label="Places pages">
+                            <ul class="pagination justify-content-center flex-wrap">
+                                <li class="page-item @(page <= 1 ? "disabled" : "")">
+                                    <a class="page-link" href="@PageUrl(Math.Max(1, page - 1))" aria-label="Previous"><i class="bi bi-chevron-left"></i></a>
+                                </li>
+
+                                @if (windowStart > 1)
+                                {
+                                    <li class="page-item"><a class="page-link" href="@PageUrl(1)">1</a></li>
+                                    @if (windowStart > 2)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                                    }
+                                }
+
+                                @for (var p = windowStart; p <= windowEnd; p++)
+                                {
+                                    <li class="page-item @(p == page ? "active" : "")">
+                                        <a class="page-link" href="@PageUrl(p)">@p</a>
+                                    </li>
+                                }
+
+                                @if (windowEnd < totalPages)
+                                {
+                                    @if (windowEnd < totalPages - 1)
+                                    {
+                                        <li class="page-item disabled"><span class="page-link">…</span></li>
+                                    }
+                                    <li class="page-item"><a class="page-link" href="@PageUrl(totalPages)">@totalPages</a></li>
+                                }
+
+                                <li class="page-item @(page >= totalPages ? "disabled" : "")">
+                                    <a class="page-link" href="@PageUrl(Math.Min(totalPages, page + 1))" aria-label="Next"><i class="bi bi-chevron-right"></i></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/explore.js" asp-append-version="true"></script>
+}

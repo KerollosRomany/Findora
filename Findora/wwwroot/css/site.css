@@ -597,3 +597,21 @@ textarea.form-control { min-height: 120px; resize: vertical; }
     filter: blur(24px) brightness(.92);
     z-index: -1;
 }
+/* ---------- Explore page ---------- */
+.explore-filters {
+    background-color: #fff;
+    border: 1px solid var(--f-line);
+    border-radius: var(--f-radius-lg);
+    padding: 1.25rem;
+}
+
+@media (min-width: 992px) {
+    .explore-filters {
+        position: sticky;
+        top: calc(var(--f-nav-h) + 1rem);
+    }
+}
+
+.explore-filters .form-check {
+    margin-bottom: .4rem;
+}
