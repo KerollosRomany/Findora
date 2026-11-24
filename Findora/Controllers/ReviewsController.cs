@@ -23,12 +23,12 @@ namespace Findora.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CreateReviewViewModel reviewViewModelFromRequest)
+        public async Task<IActionResult> Create(ReviewFormViewModel reviewViewModelFromRequest)
         {
             if(!ModelState.IsValid) 
             {
                 TempData["Error"] = "Please fix the errors and try again.";
-                return RedirectToAction("Details", "Places", new {id = reviewViewModelFromRequest.PlaceId}, "reviews");
+                return RedirectToAction("Details", "Places", new {id = reviewViewModelFromRequest.PlaceId, fragment = "reviews" });
             }
 
             var userId = _userManager.GetUserId(User);
@@ -46,6 +46,54 @@ namespace Findora.Controllers
                     break;
             }
             return RedirectToAction("Details", "Places", new { id = reviewViewModelFromRequest.PlaceId }, "reviews");
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(ReviewFormViewModel reviewViewModelFromRequest, int reviewId)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Please fix the errors and try again.";
+                return RedirectToAction(
+                    "Details",
+                    "Places",
+                    new { id = reviewViewModelFromRequest.PlaceId, fragment = "reviews" });
+            }
+            var userId = _userManager.GetUserId(User);
+            var result = await _reviewService.EditAsync(reviewId, userId, reviewViewModelFromRequest);
+            switch (result)
+            {
+                case ReviewResult.Success:
+                    TempData["Success"] = "Review Updated Successfully.";
+                    break;
+                case ReviewResult.ReviewNotFound:
+                    TempData["Error"] = "Review not found!";
+                    break;
+
+            }
+            return RedirectToAction("Details", "Places", new { id = reviewViewModelFromRequest.PlaceId }, "reviews");
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int reviewId, int placeId)
+        {
+            var userId = _userManager.GetUserId(User);
+            var result = await _reviewService.DeleteAsync(reviewId, userId);
+            switch (result)
+            {
+                case ReviewResult.Success:
+                    TempData["Success"] = "Review Deleted Successfully.";
+                    break;
+                case ReviewResult.ReviewNotFound:
+                    TempData["Error"] = "Review not found!";
+                    break;
+
+            }
+            return RedirectToAction("Details", "Places", new { id = placeId, fragment = "reviews" });
         }
     }
 }

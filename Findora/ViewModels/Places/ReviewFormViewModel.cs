@@ -2,7 +2,7 @@
 
 namespace Findora.ViewModels.Places
 {
-    public class CreateReviewViewModel
+    public class ReviewFormViewModel
     {
         public int PlaceId { get; set; }
 

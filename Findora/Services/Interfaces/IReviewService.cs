@@ -6,11 +6,16 @@ namespace Findora.Services.Interfaces
     {
         Success,
         PlaceNotFound,
+        ReviewNotFound,
         AlreadyReviewed
     }
 
     public interface IReviewService
     {
-        Task<ReviewResult> CreateAsync(string userId, CreateReviewViewModel model);
+        Task<ReviewResult> CreateAsync(string userId, ReviewFormViewModel model);
+
+        Task<ReviewResult> EditAsync(int reviewId, string userId, ReviewFormViewModel model);
+        Task<ReviewResult> DeleteAsync(int reviewId, string userId);
+
     }
 }

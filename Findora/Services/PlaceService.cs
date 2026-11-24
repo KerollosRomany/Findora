@@ -170,6 +170,7 @@ namespace Findora.Services
                         .OrderByDescending(r => r.CreatedAt)
                         .Select(r => new ReviewViewModel
                         {
+                            Id = r.Id,
                             UserName = r.User.FullName,
                             Rating = r.Rating,
                             Comment = r.Comment,

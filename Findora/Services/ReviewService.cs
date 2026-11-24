@@ -15,7 +15,7 @@ namespace Findora.Services
         }
 
 
-        public async Task<ReviewResult> CreateAsync(string userId, CreateReviewViewModel model)
+        public async Task<ReviewResult> CreateAsync(string userId, ReviewFormViewModel model)
         {
 
             var placeExists = await _context.Places.AnyAsync(p => p.Id == model.PlaceId);
@@ -46,5 +46,39 @@ namespace Findora.Services
             }
             return ReviewResult.Success;
         }
+
+        public async Task<ReviewResult> EditAsync(int reviewId, string userId, ReviewFormViewModel model)
+        {
+            var reviewToEdit = await _context.Reviews
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.Id == reviewId);
+
+            if (reviewToEdit == null)
+                return ReviewResult.ReviewNotFound;
+
+            reviewToEdit.Rating = model.Rating;
+            reviewToEdit.Title = model.Title;
+            reviewToEdit.Comment = model.Comment;
+
+            await _context.SaveChangesAsync();
+            return ReviewResult.Success;
+
+        }
+
+        public async Task<ReviewResult> DeleteAsync(int reviewId, string userId)
+        {
+            var reviewToDelete = await _context.Reviews
+                .FirstOrDefaultAsync(r => r.UserId == userId && r.Id == reviewId);
+
+
+            if (reviewToDelete == null)
+                return ReviewResult.ReviewNotFound;
+
+            _context.Reviews.Remove(reviewToDelete);
+
+            await _context.SaveChangesAsync();
+
+            return ReviewResult.Success;
+        }
+
     }
 }

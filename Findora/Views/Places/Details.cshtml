@@ -199,29 +199,71 @@
                         </div>
                     </div>
 
-                    @foreach (var review in Model.Reviews)
-                    {
-                        <div class="review">
-                            <span class="f-avatar">@(string.IsNullOrEmpty(review.UserName) ? "?" : review.UserName[..1].ToUpperInvariant())</span>
-                            <div>
-                                <div class="d-flex align-items-center gap-2 flex-wrap">
-                                    <span class="review-name">@review.UserName</span>
-                                    <span class="review-date">@review.CreatedAt.ToString("MMMM yyyy", inv)</span>
-                                </div>
-                                <div class="stars mt-1">
-                                    @for (var s = 1; s <= 5; s++)
-                                    {
-                                        <i class="bi bi-star-fill @(s > review.Rating ? "off" : "")"></i>
-                                    }
-                                </div>
-                                @if (!string.IsNullOrWhiteSpace(review.Title))
+
+                @foreach (var review in Model.Reviews)
+                {
+                    var isCurrentUserReview = Model.CurrentUserReviewId == review.Id;
+
+                    <div class="review">
+                        <span class="f-avatar">
+                            @(string.IsNullOrEmpty(review.UserName) ? "?" : review.UserName[..1].ToUpperInvariant())
+                        </span>
+
+                        <div>
+                            <div class="d-flex align-items-center gap-2 flex-wrap">
+                                <span class="review-name">@review.UserName</span>
+                                <span class="review-date">@review.CreatedAt.ToString("MMMM yyyy", inv)</span>
+
+                                @if (isCurrentUserReview)
                                 {
-                                    <div class="review-title">@review.Title</div>
+                                    <span class="badge bg-primary">Your review</span>
                                 }
-                                <p>@review.Comment</p>
                             </div>
+
+                            <div class="stars mt-1">
+                                @for (var s = 1; s <= 5; s++)
+                                {
+                                    <i class="bi bi-star-fill @(s > review.Rating ? "off" : "")"></i>
+                                }
+                            </div>
+
+                            @if (!string.IsNullOrWhiteSpace(review.Title))
+                            {
+                                <div class="review-title">@review.Title</div>
+                            }
+
+                            <p>@review.Comment</p>
+
+                            @if (isCurrentUserReview && User.IsInRole("Student"))
+                            {
+                                <div class="d-flex gap-2">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-primary edit-review-btn"
+                                                data-review-id="@review.Id"
+                                                data-review-title="@review.Title"
+                                                data-review-comment="@review.Comment"
+                                                data-review-rating="@review.Rating">
+                                            Edit
+                                        </button>
+
+                                        <form asp-controller="Reviews"
+                                              asp-action="Delete"
+                                              method="post">
+
+                                            <input type="hidden" name="reviewId" value="@review.Id" />
+                                            <input type="hidden" name="placeId" value="@Model.Id" />
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this review?');">
+                                                Delete
+                                            </button>
+                                        </form>
+                                </div>
+                            }
                         </div>
-                    }
+                    </div>
+                }
+
                 }
                 else
                 {
@@ -239,47 +281,72 @@
                 }
                 else if (User.IsInRole("Student"))
                 {
-                    if (Model.CurrentUserReviewId.HasValue)
+                    @if (Model.CurrentUserReviewId.HasValue)
                     {
-                        <div class="review-form mt-4">
+                        <div id="existingReviewMessage" class="review-form mt-4">
                             <h3 class="h5 mb-2">Your review</h3>
-                            <p class="mb-0 text-muted-2"><i class="bi bi-check-circle-fill text-success me-1"></i> You already reviewed this place. Thank you for sharing your experience!</p>
+                            <p class="mb-0 text-muted-2">
+                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                You already reviewed this place.
+                            </p>
                         </div>
                     }
-                    else
-                    {
-                        <form class="review-form mt-4" method="post" asp-controller="Reviews" asp-action="Create">
-                            <h3 class="h5 mb-3">Write a review</h3>
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="PlaceId" value="@Model.Id" />
 
-                            <div class="mb-3">
-                                <label class="form-label d-block">Your rating</label>
-                                <div class="star-input" role="radiogroup" aria-label="Rating">
-                                    @for (var s = 5; s >= 1; s--)
-                                    {
-                                        <input type="radio" name="Rating" id="rating-@s" value="@s" required />
-                                        <label for="rating-@s" title="@s star@(s == 1 ? "" : "s")"><i class="bi bi-star-fill"></i></label>
-                                    }
-                                </div>
-                                <span class="field-validation-valid text-danger" data-valmsg-for="Rating" data-valmsg-replace="true"></span>
+                    <form id="reviewForm"
+                          data-edit-url="@Url.Action("Edit", "Reviews")"
+                          class="review-form mt-4 @(Model.CurrentUserReviewId.HasValue ? "d-none" : "")"
+                          method="post"
+                          asp-controller="Reviews"
+                          asp-action="Create">
+
+                        <h3 id="reviewFormTitle" class="h5 mb-3">Write a review</h3>
+
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" id="reviewId" name="reviewId" />
+                        <input type="hidden" name="PlaceId" value="@Model.Id" />
+
+                        <div class="mb-3">
+                            <label class="form-label d-block">Your rating</label>
+
+                            <div class="star-input" role="radiogroup" aria-label="Rating">
+                                @for (var s = 5; s >= 1; s--)
+                                {
+                                    <input type="radio" name="Rating"
+                                           id="rating-@s" value="@s" required />
+
+                                    <label for="rating-@s" title="@s star@(s == 1 ? "" : "s")">
+                                        <i class="bi bi-star-fill"></i>
+                                    </label>
+                                }
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="review-title">Title</label>
-                                <input class="form-control" id="review-title" name="Title" maxlength="150" placeholder="Sum it up in a few words" data-val="true" data-val-required="The Title field is required." data-val-length="Title must be at most 150 characters." data-val-length-max="150" />
-                                <span class="field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="review-title">Title</label>
 
-                            <div class="mb-3">
-                                <label class="form-label" for="review-comment">Your experience</label>
-                                <textarea class="form-control" id="review-comment" name="Comment" rows="4" maxlength="2000" placeholder="Is it quiet? Is the Wi-Fi good? Enough power outlets?" data-val="true" data-val-required="The Comment field is required." data-val-length="Comment must be at most 2000 characters." data-val-length-max="2000"></textarea>
-                                <span class="field-validation-valid" data-valmsg-for="Comment" data-valmsg-replace="true"></span>
-                            </div>
+                            <input class="form-control"
+                                   id="review-title"
+                                   name="Title"
+                                   maxlength="150"
+                                   placeholder="Sum it up in a few words" />
+                        </div>
 
-                            <button type="submit" class="btn btn-primary"><i class="bi bi-send me-1"></i> Submit review</button>
-                        </form>
-                    }
+                        <div class="mb-3">
+                            <label class="form-label" for="review-comment">Your experience</label>
+
+                            <textarea class="form-control"
+                                      id="review-comment"
+                                      name="Comment"
+                                      rows="4"
+                                      maxlength="2000"
+                                      placeholder="Share your experience"></textarea>
+                        </div>
+                        <button type="submit" id="reviewSubmitBtn" class="btn btn-primary">
+                            <i class="bi bi-send me-1"></i>
+                            <span>Submit review</span>
+                        </button>
+                    </form>
                 }
             </section>
         </div>
@@ -344,4 +411,6 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script src="~/js/reviews.js" asp-append-version="true"></script>
 }
